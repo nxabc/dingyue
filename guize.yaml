@@ -1,102 +1,135 @@
 # ============================================================
-# 3X-UI Clash / Mihomo 路由规则
-# 用途：由 3X-UI 自动生成节点，本文件仅负责策略组与分流
-# 不包含任何节点 IP / UUID / Reality / 订阅凭据
+# 3X-UI / Clash / Mihomo 通用分流规则 v2
+# 设计：基础规则 + 成熟专项规则混合优化
+# 基础：MetaCubeX meta-rules-dat
+# 专项：blackmatrix7 ios_rule_script
+# 仅包含公共规则与策略，不包含任何节点、订阅、UUID、IP、域名或个人信息
+# 节点由 3X-UI 自动注入
 # ============================================================
 
 proxy-groups:
-  # 主代理组：自动包含 3X-UI 生成的所有代理节点
-  - name: 🚀 节点选择
+  - name: "🚀 节点选择"
     type: select
     include-all: true
     proxies:
-      - ♻️ 自动选择
+      - "♻️ 自动选择"
+      - "🛟 故障转移"
       - DIRECT
 
-  # 自动测速：选择延迟最低节点
-  - name: ♻️ 自动选择
+  - name: "♻️ 自动选择"
     type: url-test
     include-all: true
-    url: https://www.gstatic.com/generate_204
+    url: "https://www.gstatic.com/generate_204"
     interval: 300
     tolerance: 50
     lazy: true
 
-  - name: 🤖 AI服务
+  - name: "🛟 故障转移"
+    type: fallback
+    include-all: true
+    url: "https://www.gstatic.com/generate_204"
+    interval: 300
+    lazy: true
+
+  - name: "🤖 AI服务"
     type: select
     proxies:
-      - 🚀 节点选择
-      - ♻️ 自动选择
-      - DIRECT
+      - "🚀 节点选择"
+      - "♻️ 自动选择"
+      - "🛟 故障转移"
 
-  - name: 📺 国际媒体
+  - name: "🌐 Google服务"
     type: select
     proxies:
-      - 🚀 节点选择
-      - ♻️ 自动选择
+      - "🚀 节点选择"
+      - "♻️ 自动选择"
+      - "🛟 故障转移"
 
-  - name: 🎬 国内媒体
+  - name: "📺 国际媒体"
     type: select
     proxies:
-      - DIRECT
-      - 🚀 节点选择
+      - "🚀 节点选择"
+      - "♻️ 自动选择"
+      - "🛟 故障转移"
 
-  - name: ✈️ Telegram
-    type: select
-    proxies:
-      - 🚀 节点选择
-      - ♻️ 自动选择
-
-  - name: 🐙 GitHub
-    type: select
-    proxies:
-      - 🚀 节点选择
-      - ♻️ 自动选择
-      - DIRECT
-
-  - name: Ⓜ️ 微软服务
+  - name: "🎬 国内媒体"
     type: select
     proxies:
       - DIRECT
-      - 🚀 节点选择
-      - ♻️ 自动选择
+      - "🚀 节点选择"
 
-  - name: 🍎 Apple
+  - name: "✈️ Telegram"
+    type: select
+    proxies:
+      - "🚀 节点选择"
+      - "♻️ 自动选择"
+      - "🛟 故障转移"
+
+  - name: "💬 社交通讯"
+    type: select
+    proxies:
+      - "🚀 节点选择"
+      - "♻️ 自动选择"
+      - "🛟 故障转移"
+
+  - name: "🐙 开发服务"
+    type: select
+    proxies:
+      - "🚀 节点选择"
+      - "♻️ 自动选择"
+      - "🛟 故障转移"
+      - DIRECT
+
+  - name: "Ⓜ️ 微软服务"
     type: select
     proxies:
       - DIRECT
-      - 🚀 节点选择
+      - "🚀 节点选择"
+      - "♻️ 自动选择"
 
-  - name: 🎮 游戏平台
+  - name: "🍎 Apple"
     type: select
     proxies:
       - DIRECT
-      - 🚀 节点选择
-      - ♻️ 自动选择
+      - "🚀 节点选择"
 
-  - name: 🛡️ 广告拦截
+  - name: "🎮 游戏平台"
+    type: select
+    proxies:
+      - DIRECT
+      - "🚀 节点选择"
+      - "♻️ 自动选择"
+
+  - name: "📡 测速服务"
+    type: select
+    proxies:
+      - DIRECT
+      - "🚀 节点选择"
+      - "♻️ 自动选择"
+
+  - name: "🛡️ 广告拦截"
     type: select
     proxies:
       - REJECT
       - DIRECT
 
-  - name: 🐟 漏网之鱼
+  - name: "🐟 漏网之鱼"
     type: select
     proxies:
-      - 🚀 节点选择
-      - ♻️ 自动选择
+      - "🚀 节点选择"
+      - "♻️ 自动选择"
+      - "🛟 故障转移"
       - DIRECT
 
-
 rule-providers:
-
+  # ---------- 基础规则：MetaCubeX ----------
   private_domain:
     type: http
     behavior: domain
     format: mrs
     interval: 86400
     path: ./ruleset/private_domain.mrs
-    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs"
 
   ads_domain:
     type: http
@@ -104,7 +137,7 @@ rule-providers:
     format: mrs
     interval: 86400
     path: ./ruleset/ads_domain.mrs
-    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ads-all.mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ads-all.mrs"
 
   cn_domain:
     type: http
@@ -112,7 +145,7 @@ rule-providers:
     format: mrs
     interval: 86400
     path: ./ruleset/cn_domain.mrs
-    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs"
 
   geolocation_not_cn:
     type: http
@@ -120,95 +153,7 @@ rule-providers:
     format: mrs
     interval: 86400
     path: ./ruleset/geolocation_not_cn.mrs
-    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs
-
-  openai_domain:
-    type: http
-    behavior: domain
-    format: mrs
-    interval: 86400
-    path: ./ruleset/openai_domain.mrs
-    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/openai.mrs
-
-  github_domain:
-    type: http
-    behavior: domain
-    format: mrs
-    interval: 86400
-    path: ./ruleset/github_domain.mrs
-    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/github.mrs
-
-  telegram_domain:
-    type: http
-    behavior: domain
-    format: mrs
-    interval: 86400
-    path: ./ruleset/telegram_domain.mrs
-    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/telegram.mrs
-
-  youtube_domain:
-    type: http
-    behavior: domain
-    format: mrs
-    interval: 86400
-    path: ./ruleset/youtube_domain.mrs
-    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/youtube.mrs
-
-  netflix_domain:
-    type: http
-    behavior: domain
-    format: mrs
-    interval: 86400
-    path: ./ruleset/netflix_domain.mrs
-    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/netflix.mrs
-
-  spotify_domain:
-    type: http
-    behavior: domain
-    format: mrs
-    interval: 86400
-    path: ./ruleset/spotify_domain.mrs
-    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/spotify.mrs
-
-  bilibili_domain:
-    type: http
-    behavior: domain
-    format: mrs
-    interval: 86400
-    path: ./ruleset/bilibili_domain.mrs
-    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/bilibili.mrs
-
-  microsoft_domain:
-    type: http
-    behavior: domain
-    format: mrs
-    interval: 86400
-    path: ./ruleset/microsoft_domain.mrs
-    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/microsoft.mrs
-
-  onedrive_domain:
-    type: http
-    behavior: domain
-    format: mrs
-    interval: 86400
-    path: ./ruleset/onedrive_domain.mrs
-    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/onedrive.mrs
-
-  apple_domain:
-    type: http
-    behavior: domain
-    format: mrs
-    interval: 86400
-    path: ./ruleset/apple_domain.mrs
-    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/apple.mrs
-
-  steam_domain:
-    type: http
-    behavior: domain
-    format: mrs
-    interval: 86400
-    path: ./ruleset/steam_domain.mrs
-    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/steam.mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs"
 
   private_ip:
     type: http
@@ -216,7 +161,7 @@ rule-providers:
     format: mrs
     interval: 86400
     path: ./ruleset/private_ip.mrs
-    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/private.mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/private.mrs"
 
   cn_ip:
     type: http
@@ -224,19 +169,234 @@ rule-providers:
     format: mrs
     interval: 86400
     path: ./ruleset/cn_ip.mrs
-    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs"
 
-  telegram_ip:
+  # ---------- AI ----------
+  openai:
     type: http
-    behavior: ipcidr
-    format: mrs
+    behavior: classical
+    format: yaml
     interval: 86400
-    path: ./ruleset/telegram_ip.mrs
-    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs
+    path: ./ruleset/openai.yaml
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/OpenAI/OpenAI.yaml"
 
+  claude:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/claude.yaml
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Claude/Claude.yaml"
+
+  gemini:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/gemini.yaml
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Gemini/Gemini.yaml"
+
+  # ---------- Google ----------
+  google:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/google.yaml
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Google/Google.yaml"
+
+  # ---------- 国际媒体 ----------
+  youtube:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/youtube.yaml
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/YouTube/YouTube.yaml"
+
+  netflix:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/netflix.yaml
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Netflix/Netflix.yaml"
+
+  disney:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/disney.yaml
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Disney/Disney.yaml"
+
+  primevideo:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/primevideo.yaml
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/PrimeVideo/PrimeVideo.yaml"
+
+  spotify:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/spotify.yaml
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Spotify/Spotify.yaml"
+
+  tiktok:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/tiktok.yaml
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/TikTok/TikTok.yaml"
+
+  bahamut:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/bahamut.yaml
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Bahamut/Bahamut.yaml"
+
+  bilibili:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/bilibili.yaml
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/BiliBili/BiliBili.yaml"
+
+  # ---------- Telegram / 社交 ----------
+  telegram:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/telegram.yaml
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Telegram/Telegram.yaml"
+
+  discord:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/discord.yaml
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Discord/Discord.yaml"
+
+  whatsapp:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/whatsapp.yaml
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Whatsapp/Whatsapp.yaml"
+
+  instagram:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/instagram.yaml
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Instagram/Instagram.yaml"
+
+  twitter:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/twitter.yaml
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Twitter/Twitter.yaml"
+
+  # ---------- 开发 ----------
+  github:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/github.yaml
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/GitHub/GitHub.yaml"
+
+  gitlab:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/gitlab.yaml
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/GitLab/GitLab.yaml"
+
+  # ---------- Microsoft / Apple ----------
+  microsoft:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/microsoft.yaml
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Microsoft/Microsoft.yaml"
+
+  onedrive:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/onedrive.yaml
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/OneDrive/OneDrive.yaml"
+
+  apple:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/apple.yaml
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Apple/Apple.yaml"
+
+  # ---------- 游戏 ----------
+  steam:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/steam.yaml
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Steam/Steam.yaml"
+
+  epic:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/epic.yaml
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Epic/Epic.yaml"
+
+  playstation:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/playstation.yaml
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/PlayStation/PlayStation.yaml"
+
+  xbox:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/xbox.yaml
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Xbox/Xbox.yaml"
+
+  # ---------- 测速 ----------
+  speedtest:
+    type: http
+    behavior: classical
+    format: yaml
+    interval: 86400
+    path: ./ruleset/speedtest.yaml
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Speedtest/Speedtest.yaml"
 
 rules:
-  # 本机 / 局域网永远直连
+  # 私有网络
   - RULE-SET,private_domain,DIRECT
   - RULE-SET,private_ip,DIRECT,no-resolve
 
@@ -244,38 +404,55 @@ rules:
   - RULE-SET,ads_domain,🛡️ 广告拦截
 
   # AI
-  - RULE-SET,openai_domain,🤖 AI服务
-
-  # GitHub
-  - RULE-SET,github_domain,🐙 GitHub
-
-  # Telegram
-  - RULE-SET,telegram_domain,✈️ Telegram
-  - RULE-SET,telegram_ip,✈️ Telegram,no-resolve
+  - RULE-SET,openai,🤖 AI服务
+  - RULE-SET,claude,🤖 AI服务
+  - RULE-SET,gemini,🤖 AI服务
 
   # 国际媒体
-  - RULE-SET,youtube_domain,📺 国际媒体
-  - RULE-SET,netflix_domain,📺 国际媒体
-  - RULE-SET,spotify_domain,📺 国际媒体
+  - RULE-SET,youtube,📺 国际媒体
+  - RULE-SET,netflix,📺 国际媒体
+  - RULE-SET,disney,📺 国际媒体
+  - RULE-SET,primevideo,📺 国际媒体
+  - RULE-SET,spotify,📺 国际媒体
+  - RULE-SET,tiktok,📺 国际媒体
+  - RULE-SET,bahamut,📺 国际媒体
+
+  # Telegram / 社交
+  - RULE-SET,telegram,✈️ Telegram
+  - RULE-SET,discord,💬 社交通讯
+  - RULE-SET,whatsapp,💬 社交通讯
+  - RULE-SET,instagram,💬 社交通讯
+  - RULE-SET,twitter,💬 社交通讯
+
+  # 开发
+  - RULE-SET,github,🐙 开发服务
+  - RULE-SET,gitlab,🐙 开发服务
+
+  # Microsoft / Apple
+  - RULE-SET,onedrive,Ⓜ️ 微软服务
+  - RULE-SET,microsoft,Ⓜ️ 微软服务
+  - RULE-SET,apple,🍎 Apple
+
+  # 游戏
+  - RULE-SET,steam,🎮 游戏平台
+  - RULE-SET,epic,🎮 游戏平台
+  - RULE-SET,playstation,🎮 游戏平台
+  - RULE-SET,xbox,🎮 游戏平台
+
+  # 测速
+  - RULE-SET,speedtest,📡 测速服务
 
   # 国内媒体
-  - RULE-SET,bilibili_domain,🎬 国内媒体
+  - RULE-SET,bilibili,🎬 国内媒体
 
-  # Microsoft
-  - RULE-SET,onedrive_domain,Ⓜ️ 微软服务
-  - RULE-SET,microsoft_domain,Ⓜ️ 微软服务
+  # Google放在Gemini/YouTube等专项之后
+  - RULE-SET,google,🌐 Google服务
 
-  # Apple
-  - RULE-SET,apple_domain,🍎 Apple
-
-  # Steam / 游戏
-  - RULE-SET,steam_domain,🎮 游戏平台
-
-  # 中国大陆域名/IP直连
+  # 中国大陆直连
   - RULE-SET,cn_domain,DIRECT
   - RULE-SET,cn_ip,DIRECT,no-resolve
 
-  # 明确属于境外的域名
+  # 境外域名
   - RULE-SET,geolocation_not_cn,🚀 节点选择
 
   # 最终兜底
